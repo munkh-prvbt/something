@@ -9,7 +9,7 @@ npm run build
 # navigate into the build output directory
 cd dist
 
-echo 'www.sadcat.mn' > CNAME
+echo 'http://www.sadcat.mn/' > CNAME
 
 git init
 git add -A
