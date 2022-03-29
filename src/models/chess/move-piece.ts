@@ -1,6 +1,6 @@
-import type { Board, Square } from './interfaces'
+import type { Square } from './interfaces'
 import { Piece, type Horizontal, type Vertical } from './enums'
-import { flatten } from 'lodash'
+import { cloneDeep, flatten } from 'lodash'
 
 const isLegal = (start: Square, end: Square): boolean => {
   const { id: startId, item } = start
@@ -25,19 +25,20 @@ export const movePiece = (
   x2: Horizontal,
   y2: Vertical
 ): Square[][] => {
+  const copy = cloneDeep(squares)
   if (x1 === x2 && y1 === y2) {
-    return squares
+    return copy
   }
 
-  const flatBoard = flatten(squares)
+  const flatBoard = flatten(copy)
 
   const start = flatBoard.find(({ x, y }) => x === x1 && y === y1)
   const end = flatBoard.find(({ x, y }) => x === x2 && y === y2)
 
   if (start && end && isLegal(start, end)) {
-    squares[Math.floor(end.id / 8)][end.id % 8].item = start.item
-    squares[Math.floor(start.id / 8)][start.id % 8].item = undefined
+    copy[Math.floor(end.id / 8)][end.id % 8].item = start.item
+    copy[Math.floor(start.id / 8)][start.id % 8].item = undefined
   }
 
-  return squares
+  return copy
 }
