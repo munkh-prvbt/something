@@ -5,11 +5,30 @@ import { getIcon } from '@/models/chess'
 <script lang="ts">
 export default {
   props: ['square', 'dropped', 'dragging'],
+  methods: {
+    dragStart(event: DragEvent) {
+      if (event.dataTransfer) {
+        event.dataTransfer.setData('text/plain', '')
+        event.dataTransfer.effectAllowed = 'move'
+      }
+    },
+    dragOver() {
+      document.documentElement.style.cursor = 'grabbing'
+    },
+    dragEnd() {
+      document.documentElement.style.cursor = 'default'
+      this.dropped(this.square)
+    },
+  },
 }
 </script>
 
 <template>
-  <div draggable @dragenter.prevent="dragging(square)">
+  <div
+    @dragstart="dragStart($event)"
+    @dragover.prevent="dragOver()"
+    @dragenter.prevent="dragging(square)"
+  >
     <div class="text-sm fixed text-gray-500">
       {{ square.y + square.x }}
     </div>
@@ -17,8 +36,8 @@ export default {
       draggable
       v-if="square.item !== undefined"
       :src="getIcon(square.item)"
-      @dragend.prevent="dropped(square)"
-      class="rounded-full cursor-grab hover:scale-105 transition"
+      @dragend.prevent="dragEnd()"
+      class="rounded-full cursor-grab hover:scale-105 transition active:scale-90"
     />
   </div>
 </template>
@@ -29,8 +48,7 @@ img {
   width: 100%;
   height: 100%;
 }
-.ms-grab-cursor,
-.ms-grabbing-cursor {
+img:active {
   cursor: grabbing;
 }
 </style>
