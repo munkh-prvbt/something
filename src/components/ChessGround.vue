@@ -74,7 +74,6 @@ export default {
 
       this.moves.push(square.item?.piece[0] + endPoint.y + endPoint.x)
       this.movesCache.push(square.item?.piece[0] + square.y + square.x)
-      console.log(this.movesCache)
 
       anime({
         targets: `.${square.y + square.x}`,
